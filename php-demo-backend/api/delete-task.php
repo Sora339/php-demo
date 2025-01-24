@@ -12,20 +12,20 @@ $db_name = $_ENV['DB_NAME'];
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: http://localhost:3000');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS, DELETE');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
+// リクエストデータ取得
+$data = json_decode(file_get_contents("php://input"), true);
+
+// データベース接続
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-$result = $conn->query("SELECT * FROM todos WHERE completed = 0");
-$tasks = [];
-while ($row = $result->fetch_assoc()) {
-    $tasks[] = [
-        "id" => $row["id"],
-        "title" => $row["title"],
-        "completed" => (bool)$row["completed"],
-    ];
-}
+// タスク追加
+$stmt = $conn->prepare("DELETE FROM todos WHERE id = ?");
+$stmt->bind_param("i", $data['id'],);
+$stmt->execute();
 
-echo json_encode($tasks);
+// 成功レスポンス
+echo json_encode(["success" => true]);
 ?>

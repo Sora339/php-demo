@@ -28,3 +28,4 @@ $stmt->execute();
 
 // 成功レスポンス
 echo json_encode(["success" => true]);
+?>
